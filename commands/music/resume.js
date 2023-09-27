@@ -26,7 +26,7 @@ module.exports = {
 			});
 		}
 
-		if (player.paused) {
+		if (!player.paused) {
 			return interaction.reply({
 				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription("일시정지 상태가 아니에요")],
 				ephemeral: true,

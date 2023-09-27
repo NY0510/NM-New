@@ -1,0 +1,18 @@
+{
+  "name": "slash-autocomplete",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "dev": "bun run --watch app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "4.1.2",
+    "discord.js": "^14.13.0",
+    "magmastream": "^2.2.3"
+  }
+}

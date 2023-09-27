@@ -36,7 +36,7 @@ module.exports = {
 			return new EmbedBuilder()
 				.setColor(interaction.client.config.color.normal)
 				.setTitle("📋 현재 대기열")
-				.setDescription(`💿 **${(textLengthOverCut(player.queue.current.title, 50), player.queue.current.uri)}**`)
+				.setDescription(`💿 **${hyperlink(textLengthOverCut(player.queue.current.title, 50), player.queue.current.uri)}**`)
 				.setFooter({ text: `( ${currentPage + 1} / ${maxPage} 페이지)` })
 				.addFields(
 					queueListForPage.map((song) => ({

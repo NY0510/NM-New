@@ -6,6 +6,7 @@ packages/*/*.wasm
 profile.json
 
 node_modules
+config.json
 .envrc
 .swcrc
 yarn.lock

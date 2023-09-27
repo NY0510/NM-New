@@ -30,15 +30,17 @@ module.exports = {
 			return queueList.slice(startIdx, endIdx);
 		};
 
+		log.info(JSON.stringify(player.queue.current));
+
 		const getQueueEmbed = (queueListForPage) => {
 			return new EmbedBuilder()
 				.setColor(interaction.client.config.color.normal)
 				.setTitle("📋 현재 대기열")
-				.setDescription(`💿 **${hyperlink(textLengthOverCut(player.queue.current.title, 50), player.queue.current.uri)}**`)
+				.setDescription(`💿 **${textLengthOverCut(player.queue.current.title, 50)}**`)
 				.setFooter({ text: `( ${currentPage + 1} / ${maxPage} 페이지)` })
 				.addFields(
 					queueListForPage.map((song) => ({
-						name: song.title,
+						name: hyperlink(textLengthOverCut(song.title, 50), player.queue.current.uri),
 						value: song.duration,
 					}))
 				);

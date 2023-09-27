@@ -3,7 +3,7 @@
 	"clientId": "864708105890562048",
 	"devGuildId": "1106859083925033021",
 	"ownerId": "690148325604720660",
-	"viewServerListAtStart": true,
+	"viewServerListAtStart": false,
 	"color": {
 		"normal": "#b2d1bd",
 		"error": "#ff3333"

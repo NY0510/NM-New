@@ -18,6 +18,7 @@ module.exports = {
 		const queueList = player.queue.map((song, index) => ({
 			title: `${index + 1}. ${song.title}`,
 			duration: song.isStream ? "LIVE" : msToTime(song.duration),
+			requester: song.requester,
 		}));
 
 		const itemsPerPage = 10;
@@ -30,18 +31,19 @@ module.exports = {
 			return queueList.slice(startIdx, endIdx);
 		};
 
-		log.info(JSON.stringify(player.queue.current));
-
 		const getQueueEmbed = (queueListForPage) => {
+			let leftQueue = queueList.length - (currentPage + 1) * itemsPerPage;
+			leftQueue = leftQueue < 0 ? 0 : leftQueue; // 음수이면 0으로 설정
+
 			return new EmbedBuilder()
 				.setColor(interaction.client.config.color.normal)
 				.setTitle("📋 현재 대기열")
 				.setDescription(`💿 **${hyperlink(textLengthOverCut(player.queue.current.title, 50), player.queue.current.uri)}**`)
-				.setFooter({ text: `( ${currentPage + 1} / ${maxPage} 페이지)` })
+				.setFooter({ text: `( ${currentPage + 1} / ${maxPage} 페이지 )\n+${leftQueue}곡` })
 				.addFields(
 					queueListForPage.map((song) => ({
-						name: textLengthOverCut(song.title, 70),
-						value: song.duration,
+						name: textLengthOverCut(song.title, 60),
+						value: `**\`${song.duration}\`** (${song.requester})`,
 					}))
 				);
 		};
@@ -83,7 +85,7 @@ module.exports = {
 
 		collector.on("end", async () => {
 			paginationRow.components.forEach((c) => c.setDisabled(true));
-			await replyMessage.edit({ embeds: [getQueueEmbed(getQueueListForPage(currentPage)).setFooter({ text: "🔔 /queue 명령어를 다시 사용해 주세요" })], components: [paginationRow] });
+			await replyMessage.edit({ embeds: [getQueueEmbed(getQueueListForPage(currentPage)).setFooter({ text: "/queue 명령어를 다시 사용해 주세요" })], components: [paginationRow] });
 		});
 	},
 };

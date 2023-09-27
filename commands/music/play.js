@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, channelMention, hyperlink, userMention } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, channelMention, hyperlink } = require("discord.js");
 const { getAutocompleteSearch } = require("../../utils/autocomplete");
 const { msToTime, textLengthOverCut } = require("../../utils/format");
 
@@ -93,7 +93,9 @@ module.exports = {
 
 			case "track":
 			case "search": {
-				player.queue.add(res.tracks[0]);
+				let track = res.tracks[0];
+				track.requester = interaction.member.user;
+				player.queue.add(track);
 				if (!player.playing && !player.paused && !player.queue.size) player.play();
 
 				const repeatState = player.repeat == "none" ? (player.repeat == "track" ? "곡 반복" : "대기열 반복") : "반복없음";
@@ -101,13 +103,13 @@ module.exports = {
 					embeds: [
 						new EmbedBuilder()
 							.setTitle(`💿 음악을 대기열에 추가했어요`)
-							.setDescription(hyperlink(textLengthOverCut(res.tracks[0].title, 50), res.tracks[0].uri))
-							.setThumbnail(res.tracks[0].artworkUrl)
+							.setDescription(hyperlink(textLengthOverCut(track.title, 50), track.uri))
+							.setThumbnail(track.artworkUrl)
 							.setColor(interaction.client.config.color.normal)
 							.addFields(
 								{
 									name: "곡 길이",
-									value: `┕** \`${res.tracks[0].isStream ? "LIVE" : msToTime(res.tracks[0].duration)}\`**`,
+									value: `┕** \`${track.isStream ? "LIVE" : msToTime(track.duration)}\`**`,
 									inline: true,
 								},
 								{
@@ -127,12 +129,12 @@ module.exports = {
 								},
 								{
 									name: "요청자",
-									value: `┕** ${userMention(interaction.member.id)}**`,
+									value: `┕** ${track.requester}**`,
 									inline: true,
 								},
 								{
 									name: "채널명",
-									value: `┕** \`${res.tracks[0].author}\`**`,
+									value: `┕** \`${track.author}\`**`,
 									inline: true,
 								}
 							),
@@ -143,7 +145,10 @@ module.exports = {
 			}
 
 			case "playlist": {
-				res.playlist.tracks.forEach((track) => player.queue.add(track));
+				res.playlist.tracks.forEach((track) => {
+					track.requester = interaction.member.user;
+					player.queue.add(track);
+				});
 				if (!player.playing && !player.paused && player.queue.totalSize === res.playlist.tracks.length) player.play();
 
 				const repeatState = player.repeat == "none" ? (player.repeat == "track" ? "곡 반복" : "대기열 반복") : "반복없음";
@@ -177,7 +182,7 @@ module.exports = {
 								},
 								{
 									name: "요청자",
-									value: `┕** ${userMention(interaction.member.id)}**`,
+									value: `┕** ${res.playlist.tracks[0].requester}**`,
 									inline: true,
 								},
 								{

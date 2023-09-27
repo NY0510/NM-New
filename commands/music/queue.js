@@ -40,7 +40,7 @@ module.exports = {
 				.setFooter({ text: `( ${currentPage + 1} / ${maxPage} 페이지)` })
 				.addFields(
 					queueListForPage.map((song) => ({
-						name: textLengthOverCut(song.title, 50),
+						name: textLengthOverCut(song.title, 70),
 						value: song.duration,
 					}))
 				);

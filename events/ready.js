@@ -1,5 +1,4 @@
 const { Events } = require("discord.js");
-const log = require("../utils/logging");
 
 module.exports = {
 	name: Events.ClientReady,

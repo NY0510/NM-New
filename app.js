@@ -15,6 +15,7 @@ const client = new Client({
 	],
 });
 
+global.log = log;
 client.rootPath = __dirname;
 client.config = config;
 client.defaultVolume = 100;

@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, channelMention, hyperlink, userMention } = require("discord.js");
 const { getAutocompleteSearch } = require("../../utils/autocomplete");
-const log = require("../../utils/logging");
 const { msToTime, textLengthOverCut } = require("../../utils/format");
 
 module.exports = {

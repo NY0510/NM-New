@@ -1,5 +1,4 @@
 const { Manager } = require("magmastream");
-const log = require("./logging");
 
 module.exports = async (client) => {
 	const nodes = [

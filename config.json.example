@@ -1,15 +1,15 @@
 {
-	"token": "ODY0NzA4MTA1ODkwNTYyMDQ4.GIK7i8.vbGx7oQQvexWpJ89dsIR7bFBtHsD_nrPhyorbM",
-	"clientId": "864708105890562048",
-	"devGuildId": "1106859083925033021",
-	"ownerId": "690148325604720660",
+	"token": "",
+	"clientId": "",
+	"devGuildId": "",
+	"ownerId": "",
 	"viewServerListAtStart": false,
 	"color": {
 		"normal": "#b2d1bd",
 		"error": "#ff3333"
 	},
 	"lavalink": {
-		"host": "219.241.14.3",
+		"host": "localhost",
 		"port": 2333,
 		"secure": false,
 		"passwd": "password123!!!"

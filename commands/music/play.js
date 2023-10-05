@@ -1,6 +1,6 @@
-const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, channelMention, hyperlink } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField, channelMention } = require("discord.js");
 const { getAutocompleteSearch } = require("../../utils/autocomplete");
-const { msToTime, textLengthOverCut } = require("../../utils/format");
+const { msToTime, textLengthOverCut, hyperlink } = require("../../utils/format");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -17,12 +17,20 @@ module.exports = {
 		} catch (e) {
 			log.error(`검색 자동완성을 불러오는 중 오류가 발생했습니다\nError: ${e.message}`);
 		}
+
 		const filtered = choices.filter((choice) => choice.startsWith(focusedValue));
 		await interaction.respond(filtered.map((choice) => ({ name: choice, value: choice })));
 	},
 
 	async execute(interaction) {
 		const query = interaction.options.getString("query", true);
+
+		if (query == "검색어 또는 URL을 입력해주세요") {
+			return interaction.reply({
+				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription("검색어 또는 URL을 입력해주세요")],
+				ephemeral: true,
+			});
+		}
 
 		if (!interaction.guild.members.me.permissions.has([PermissionsBitField.Flags.Connect, PermissionsBitField.Flags.Speak])) {
 			return interaction.reply({
@@ -57,10 +65,12 @@ module.exports = {
 			});
 		}
 
+		await interaction.deferReply();
+
 		// 음성채널 접속
 		if (!["CONNECTED", "CONNECTING"].includes(player.state)) {
 			await player.connect();
-			await interaction.reply({
+			await interaction.editReply({
 				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`🔊 ${channelMention(interaction.member.voice.channel.id)} 채널에 접속했어요`)],
 			});
 		}
@@ -113,21 +123,6 @@ module.exports = {
 									inline: true,
 								},
 								{
-									name: "남은 대기열",
-									value: `┕** \`${player.queue.length}곡\`**`,
-									inline: true,
-								},
-								{
-									name: "볼륨",
-									value: `┕** \`${player.volume}%\`**`,
-									inline: true,
-								},
-								{
-									name: "반복",
-									value: `┕** \`${repeatState}\`**`,
-									inline: true,
-								},
-								{
 									name: "요청자",
 									value: `┕** ${track.requester}**`,
 									inline: true,
@@ -166,28 +161,8 @@ module.exports = {
 									inline: true,
 								},
 								{
-									name: "남은 대기열",
-									value: `┕** \`${player.queue.length}곡\`**`,
-									inline: true,
-								},
-								{
-									name: "볼륨",
-									value: `┕** \`${player.volume}%\`**`,
-									inline: true,
-								},
-								{
-									name: "반복",
-									value: `┕** \`${repeatState}\`**`,
-									inline: true,
-								},
-								{
 									name: "요청자",
 									value: `┕** ${res.playlist.tracks[0].requester}**`,
-									inline: true,
-								},
-								{
-									name: "\u200b",
-									value: "\u200b",
 									inline: true,
 								}
 							),

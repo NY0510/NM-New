@@ -1,12 +1,12 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, hyperlink } = require("discord.js");
-const { msToTime, textLengthOverCut } = require("../../utils/format");
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
+const { msToTime, textLengthOverCut, hyperlink } = require("../../utils/format");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("queue").setDescription("대기열을 확인해요"),
 	async execute(interaction) {
 		const player = interaction.client.manager.get(interaction.guild.id);
 
-		if (!player) {
+		if (!player || !player?.queue?.current) {
 			return interaction.reply({
 				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription("현재 재생중인 음악이 없어요")],
 				ephemeral: true,
@@ -15,7 +15,7 @@ module.exports = {
 
 		await interaction.deferReply();
 
-		const queueList = player.queue.map((song, index) => ({
+		const queueList = Array.from(player.queue, (song, index) => ({
 			title: `${index + 1}. ${song.title}`,
 			duration: song.isStream ? "LIVE" : msToTime(song.duration),
 			requester: song.requester,
@@ -32,17 +32,16 @@ module.exports = {
 		};
 
 		const getQueueEmbed = (queueListForPage) => {
-			let leftQueue = queueList.length - (currentPage + 1) * itemsPerPage;
-			leftQueue = leftQueue < 0 ? 0 : leftQueue; // 음수이면 0으로 설정
+			const leftQueue = Math.max(queueList.length - (currentPage + 1) * itemsPerPage, 0);
 
 			return new EmbedBuilder()
 				.setColor(interaction.client.config.color.normal)
 				.setTitle("📋 현재 대기열")
-				.setDescription(`💿 **${hyperlink(textLengthOverCut(player.queue.current.title, 50), player.queue.current.uri)}**`)
+				.setDescription(`🎶 ${hyperlink(textLengthOverCut(player.queue.current.title, 50), player.queue.current.uri)}`)
 				.setFooter({ text: `( ${currentPage + 1} / ${maxPage} 페이지 )\n+${leftQueue}곡` })
 				.addFields(
-					queueListForPage.map((song) => ({
-						name: textLengthOverCut(song.title, 60),
+					...queueListForPage.map((song) => ({
+						name: textLengthOverCut(song.title, 50),
 						value: `**\`${song.duration}\`** (${song.requester})`,
 					}))
 				);
@@ -58,6 +57,7 @@ module.exports = {
 			row.components[1].setDisabled(currentPage === maxPage - 1);
 		};
 
+		paginationBtnDisable(paginationRow);
 		const replyMessage = await interaction.editReply({
 			embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
 			components: [paginationRow],
@@ -85,7 +85,7 @@ module.exports = {
 
 		collector.on("end", async () => {
 			paginationRow.components.forEach((c) => c.setDisabled(true));
-			await replyMessage.edit({ embeds: [getQueueEmbed(getQueueListForPage(currentPage)).setFooter({ text: "/queue 명령어를 다시 사용해 주세요" })], components: [paginationRow] });
+			await replyMessage.edit({ embeds: [getQueueEmbed(getQueueListForPage(currentPage))], components: [paginationRow] });
 		});
 	},
 };

@@ -1,0 +1,21 @@
+{
+	"token": "",
+	"clientId": "",
+	"devGuildId": "",
+	"ownerId": "",
+	"viewServerListAtStart": false,
+	"color": {
+		"normal": "#b2d1bd",
+		"error": "#ff3333"
+	},
+	"lavalink": {
+		"host": "localhost",
+		"port": 2333,
+		"secure": false,
+		"passwd": "password123!!!"
+	},
+	"logging": {
+		"command": true,
+		"button": true
+	}
+}

@@ -5,7 +5,7 @@ module.exports = {
 	async execute(interaction) {
 		const player = interaction.client.manager.get(interaction.guild.id);
 
-		if (!player) {
+		if (!player || !player?.queue?.current) {
 			return interaction.reply({
 				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription("재생중인 음악이 없어요")],
 				ephemeral: true,

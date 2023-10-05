@@ -60,6 +60,4 @@ java -jar Lavalink.jar
 
 2.  Run the bot
 
-```sh
 `node .` or `npm start`
-```

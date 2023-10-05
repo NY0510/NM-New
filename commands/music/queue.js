@@ -38,7 +38,7 @@ module.exports = {
 				.setColor(interaction.client.config.color.normal)
 				.setTitle("📋 현재 대기열")
 				.setDescription(`🎶 ${hyperlink(textLengthOverCut(player.queue.current.title, 50), player.queue.current.uri)}`)
-				.setFooter({ text: `( ${currentPage + 1} / ${maxPage} 페이지 )\n+${leftQueue}곡` })
+				.setFooter({ text: player.queue.size > itemsPerPage ? `( ${currentPage + 1} / ${maxPage} 페이지 )\n+${leftQueue}곡` : "다음 곡이 없어요" })
 				.addFields(
 					...queueListForPage.map((song) => ({
 						name: textLengthOverCut(song.title, 50),
@@ -60,7 +60,7 @@ module.exports = {
 		paginationBtnDisable(paginationRow);
 		const replyMessage = await interaction.editReply({
 			embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
-			components: [paginationRow],
+			components: player.queue.size > itemsPerPage ? [paginationRow] : [],
 		});
 
 		const collector = replyMessage.createMessageComponentCollector({

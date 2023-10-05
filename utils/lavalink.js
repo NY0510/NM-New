@@ -3,10 +3,10 @@ const { Manager } = require("magmastream");
 module.exports = async (client) => {
 	const nodes = [
 		{
-			host: "127.0.0.1",
+			host: client.config.lavalink.host,
 			identifier: "Node 1",
-			password: "password123!!!",
-			port: 2333,
+			password: client.config.lavalink.passwd,
+			port: client.config.lavalink.port,
 			retryAmount: 1000,
 			retrydelay: 10000,
 			resumeStatus: false,

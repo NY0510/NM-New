@@ -31,7 +31,7 @@ npm install
 
 ### Configuration
 
-Copy `config.example.json` to `config.json` and fill out the values:
+Copy `./src/config.example.json` to `./src/config.json` and fill out the values:
 
 -   `token` - Your bot's token
 -   `clientId` - Your bot's client ID

@@ -2,9 +2,9 @@
 	"name": "slash-autocomplete",
 	"version": "1.0.0",
 	"description": "",
-	"main": "app.js",
+	"main": "./src/app.js",
 	"scripts": {
-		"start": "bun run app.js",
+		"start": "bun run ./src/app.js",
 		"dev": "bun run --watch app.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},

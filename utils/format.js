@@ -18,4 +18,8 @@ module.exports = {
 		}
 		return txt;
 	},
+
+	hyperlink: (text, url) => {
+		return `[${text.replaceAll("[", "［").replaceAll("]", "］")}](${url})`;
+	},
 };

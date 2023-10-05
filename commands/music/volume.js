@@ -5,11 +5,12 @@ module.exports = {
 		.setName("volume")
 		.setDescription("볼륨을 설정해요")
 		.addIntegerOption((option) => option.setName("볼륨").setDescription("설정할 볼륨").setMinValue(0).setMaxValue(100)),
+
 	async execute(interaction) {
 		const player = interaction.client.manager.get(interaction.guild.id);
 		const volume = interaction.options.getInteger("볼륨", false);
 
-		if (!player) {
+		if (!player || !player?.queue?.current) {
 			return interaction.reply({
 				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription("재생중인 음악이 없어요")],
 				ephemeral: true,

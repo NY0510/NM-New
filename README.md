@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://github.com/NY0510/NM-New">
-    <img src="" alt="Screenshot"  height="300">
+    <img src="https://raw.githubusercontent.com/NY0510/NM-New/main/screenshots/demo.png" alt="Screenshot"  height="300">
   </a>
 
 ## Installation Guide

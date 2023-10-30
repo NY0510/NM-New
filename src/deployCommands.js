@@ -28,8 +28,8 @@ const rest = new REST().setToken(token);
 	try {
 		log.info(`${commands.length} 개의 슬래시 명령어를 리로드 하는 중...`);
 
-		const data = await rest.put(Routes.applicationGuildCommands(clientId, devGuildId), { body: commands });
-		// const data = await rest.put(Routes.applicationGuildCommands(clientId), { body: commands }); // For global commands
+		// const data = await rest.put(Routes.applicationGuildCommands(clientId, devGuildId), { body: commands });
+		const data = await rest.put(Routes.applicationCommands(clientId), { body: commands }); // For global commands
 
 		log.info(`${data.length} 개의 슬래시 명령어 리로드 완료!`);
 	} catch (error) {

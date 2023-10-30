@@ -1,9 +1,17 @@
 {
+	"version": "1.0.0",
 	"token": "",
 	"clientId": "",
 	"devGuildId": "",
 	"ownerId": "",
 	"viewServerListAtStart": false,
+	"presence": {
+		"status": "online",
+		"activity": {
+			"name": "NM | {playerCount}개의 서버에서 음악을",
+			"type": "Listening"
+		}
+	},
 	"color": {
 		"normal": "#b2d1bd",
 		"error": "#ff3333"

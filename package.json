@@ -1,19 +1,22 @@
 {
-	"name": "slash-autocomplete",
-	"version": "1.0.0",
-	"description": "",
-	"main": "./src/app.js",
-	"scripts": {
-		"start": "bun run ./src/app.js",
-		"dev": "bun run --watch app.js",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"dependencies": {
-		"chalk": "4.1.2",
-		"discord.js": "^14.13.0",
-		"magmastream": "^2.2.3"
-	}
+  "name": "slash-autocomplete",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./src/app.js",
+  "scripts": {
+    "start": "bun run .",
+    "dev": "bun run --watch .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "4.1.2",
+    "cheerio": "^1.0.0-rc.12",
+    "discord.js": "^14.13.0",
+    "magmastream": "^2.2.3",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6"
+  }
 }

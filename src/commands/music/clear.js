@@ -1,13 +1,9 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName("skip")
-		.setDescription("음악을 스킵해요")
-		.addIntegerOption((option) => option.setName("count").setDescription("스킵할 개수를 입력해주세요").setRequired(false)),
+	data: new SlashCommandBuilder().setName("clear").setDescription("대기열에 있는 음악을 모두 삭제해요"),
 	async execute(interaction) {
 		const player = interaction.client.manager.get(interaction.guild.id);
-		const count = interaction.options.getInteger("count", false) || 1;
 
 		if (!player || !player?.queue?.current) {
 			return interaction.reply({
@@ -30,16 +26,9 @@ module.exports = {
 			});
 		}
 
-		if (player.queue.size < count) {
-			return interaction.reply({
-				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription(`스킵할 음악이 없어요`)],
-				ephemeral: true,
-			});
-		}
-
-		player.stop(count);
+		player.queue.clear();
 		await interaction.reply({
-			embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`${count}개의 음악을 스킵했어요`)],
+			embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`대기열에 있는 모든 음악을 삭제했어요`)],
 		});
 	},
 };

@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, EmbedBuilder, StringSelectMenuBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, StringSelectMenuOptionBuilder } = require("discord.js");
-const { msToTime, textLengthOverCut, hyperlink } = require("../../utils/format");
+const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { msToTime, textLengthOverCut, hyperlink, progressBar } = require("../../utils/format");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("now").setDescription("현재 재생중인 음악을 보여줘요"),
@@ -22,7 +22,11 @@ module.exports = {
 				new EmbedBuilder()
 					.setTitle("🎶 현재 재생중")
 					.setThumbnail(track.artworkUrl)
-					.setDescription(`**${hyperlink(textLengthOverCut(track.title, 50), track.uri)}**`)
+					.setDescription(
+						`${player.playing ? "▶️" : "⏸️"} **${hyperlink(textLengthOverCut(track.title, 50), track.uri)}**\n\n${progressBar(player)}\n${msToTime(player.position)} / ${msToTime(
+							player.queue.current.duration
+						)}`
+					)
 					.setColor(interaction.client.config.color.normal)
 					.addFields(
 						{

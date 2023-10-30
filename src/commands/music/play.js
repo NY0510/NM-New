@@ -9,17 +9,15 @@ module.exports = {
 		.addStringOption((option) => option.setName("query").setDescription("검색어를 입력해주세요").setRequired(true).setAutocomplete(true)),
 
 	async autocomplete(interaction) {
-		const focusedValue = interaction.options.getFocused().toLowerCase().trim();
+		const focusedValue = interaction.options.getFocused();
 		let choices = [];
 		try {
 			if (!focusedValue) choices = ["검색어 또는 URL을 입력해주세요"];
 			else choices = await getAutocompleteSearch(focusedValue);
+			await interaction.respond(choices.map((choice) => ({ name: choice, value: choice })));
 		} catch (e) {
 			log.error(`검색 자동완성을 불러오는 중 오류가 발생했습니다\nError: ${e.message}`);
 		}
-
-		const filtered = choices.filter((choice) => choice.startsWith(focusedValue));
-		await interaction.respond(filtered.map((choice) => ({ name: choice, value: choice })));
 	},
 
 	async execute(interaction) {
@@ -71,7 +69,7 @@ module.exports = {
 		if (!["CONNECTED", "CONNECTING"].includes(player.state)) {
 			await player.connect();
 			await interaction.editReply({
-				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`🔊 ${channelMention(interaction.member.voice.channel.id)} 채널에 접속했어요`)],
+				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`${channelMention(interaction.member.voice.channel.id)} 채널에 접속했어요`)],
 			});
 		}
 
@@ -108,7 +106,6 @@ module.exports = {
 				player.queue.add(track);
 				if (!player.playing && !player.paused && !player.queue.size) player.play();
 
-				const repeatState = player.repeat == "none" ? (player.repeat == "track" ? "곡 반복" : "대기열 반복") : "반복없음";
 				await interaction.followUp({
 					embeds: [
 						new EmbedBuilder()
@@ -146,7 +143,6 @@ module.exports = {
 				});
 				if (!player.playing && !player.paused && player.queue.totalSize === res.playlist.tracks.length) player.play();
 
-				const repeatState = player.repeat == "none" ? (player.repeat == "track" ? "곡 반복" : "대기열 반복") : "반복없음";
 				await interaction.followUp({
 					embeds: [
 						new EmbedBuilder()

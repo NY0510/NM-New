@@ -20,12 +20,13 @@
 1.  Clone the repository
 
 ```sh
-git clone https://github.com/NY0510/NM.git
+git clone https://github.com/NY0510/NM-New.git
 ```
 
 2.  Install dependencies
 
 ```sh
+cd NM-New
 npm install
 ```
 

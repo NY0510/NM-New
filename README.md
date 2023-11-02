@@ -1,6 +1,6 @@
 <center><a href="https://github.com/NY0510/NM-New"><img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=200&section=header&text=NM%&fontSize=65&fontAlignY=35&animation=twinkling&fontColor=b8b8b8" /></a></center>
 
-# NM, Lavalink Discord Music Bot (New Version, Under Development)
+# NM, Lavalink Discord Music Bot
 
 <p align="center">
   <a href="https://github.com/NY0510/NM-New">

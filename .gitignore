@@ -1,3 +1,4 @@
+bun.lockb
 .DS_Store
 zig-cache
 packages/*/*.wasm

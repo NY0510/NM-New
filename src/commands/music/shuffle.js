@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 
 module.exports = {
-	data: new SlashCommandBuilder().setName("cleshufflear").setDescription("대기열을 섞어요"),
+	data: new SlashCommandBuilder().setName("shuffle").setDescription("대기열을 섞어요"),
 	async execute(interaction) {
 		const player = interaction.client.manager.get(interaction.guild.id);
 
@@ -22,13 +22,6 @@ module.exports = {
 		if (interaction.member.voice.channel?.id !== player.voiceChannel) {
 			return interaction.reply({
 				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription(`저와 같은 음성채널에 접속해 있지 않은 것 같아요`)],
-				ephemeral: true,
-			});
-		}
-
-		if (player.queue.size < count) {
-			return interaction.reply({
-				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription(`대기열이 비어있어요`)],
 				ephemeral: true,
 			});
 		}

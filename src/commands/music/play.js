@@ -117,7 +117,10 @@ module.exports = {
 
 		let res;
 		try {
-			res = await interaction.client.manager.search(query);
+			const isUrl = query.startsWith('http://') || query.startsWith('https://');
+			const searchQuery = isUrl ? encodeURI(query) : query;
+
+			res = await interaction.client.manager.search(searchQuery);
 			if (res.loadType === 'error') throw res.exception;
 		} catch (e) {
 			log.error(`음악을 검색하는 중 알 수 없는 오류가 발생했습니다\nError: ${e}`);

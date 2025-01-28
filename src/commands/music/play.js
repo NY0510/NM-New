@@ -118,7 +118,8 @@ module.exports = {
 		let res;
 		try {
 			const isUrl = query.startsWith('http://') || query.startsWith('https://');
-			const searchQuery = isUrl ? query : encodeURI(query); // Avoid double encoding
+			const isEncoded = (url) => decodeURIComponent(url) !== url;
+			const searchQuery = isUrl ? (isEncoded(query) ? query : encodeURIComponent(query)) : query;
 
 			res = await interaction.client.manager.search(searchQuery);
 			if (res.loadType === 'error') throw res.exception;

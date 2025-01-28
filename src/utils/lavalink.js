@@ -22,7 +22,7 @@ module.exports = async (client) => {
 
 	client.manager = new Manager({
 		nodes,
-		defaultSearchPlatform: 'ytmsearch',
+		defaultSearchPlatform: 'ytsearch',
 		autoPlay: true,
 		send: (id, payload) => {
 			const guild = client.guilds.cache.get(id);

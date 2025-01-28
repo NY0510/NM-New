@@ -54,7 +54,7 @@ module.exports = async (client) => {
 				}
 
 				const cardImage = await dynamicCard({
-					thumbnailURL: track.thumbnail.replace('default', 'hqdefault') || 'https://f.ny64.kr/photos/nmdefault.png',
+					thumbnailURL: track.thumbnail?.replace('default', 'hqdefault') || 'https://f.ny64.kr/photos/nmdefault.png',
 					songTitle: track.title,
 					songArtist: track.author,
 					trackRequester: track.requester.username,

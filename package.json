@@ -1,6 +1,6 @@
 {
 	"name": "nm-new",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "",
 	"main": "./src/app.js",
 	"scripts": {
@@ -17,7 +17,8 @@
 		"discord.js": "^14.17.3",
 		"magmastream": "^2.7.5",
 		"request": "^2.88.2",
-		"request-promise": "^4.2.6"
+		"request-promise": "^4.2.6",
+		"songcard": "^1.4.1"
 	},
 	"packageManager": "pnpm@8.12.1+sha1.aa961ffce9b6eaa56307d9b5ff7e984f25b7eb58"
 }

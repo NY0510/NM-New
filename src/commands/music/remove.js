@@ -1,52 +1,37 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
-const { textLengthOverCut } = require("../../utils/format");
+const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
+const { textLengthOverCut } = require('../../utils/format');
+const { checkPlayerAndVoiceChannel } = require('../../utils/music');
+const { createButtonRow } = require('../../utils/button');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("remove")
-		.setDescription("대기열에서 음악을 삭제해요")
-		.addIntegerOption((option) => option.setName("count").setDescription("삭제할 개수를 입력해주세요").setRequired(false)),
+		.setName('remove')
+		.setDescription('대기열에서 음악을 삭제해요')
+		.addIntegerOption((option) => option.setName('index').setDescription('삭제할 음악의 인덱스를 입력해주세요').setRequired(true)),
 	async execute(interaction) {
 		const player = interaction.client.manager.get(interaction.guild.id);
-		const count = interaction.options.getInteger("count", false) || 1;
+		const index = interaction.options.getInteger('index', true) - 1;
 
-		if (!player || !player?.queue?.current) {
+		const errorResponse = checkPlayerAndVoiceChannel(interaction, player);
+		if (errorResponse) return interaction.reply(errorResponse);
+
+		if (player.queue.size <= index || index < 0) {
 			return interaction.reply({
-				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription("재생중인 음악이 없어요")],
-				ephemeral: true,
+				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription(`대기열에 있는 음악의 인덱스가 잘못되었어요`)],
+				flags: [MessageFlags.Ephemeral],
 			});
 		}
 
-		if (!interaction.member.voice.channel) {
-			return interaction.reply({
-				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription("먼저 음성 채널에 접속한 다음에 사용해주세요")],
-				ephemeral: true,
-			});
-		}
+		const removed = player.queue.splice(index, 1);
 
-		if (interaction.member.voice.channel?.id !== player.voiceChannel) {
-			return interaction.reply({
-				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription(`저와 같은 음성채널에 접속해 있지 않은 것 같아요`)],
-				ephemeral: true,
-			});
+		// 카드 버튼 업데이트
+		if (player.lastMessage) {
+			const row = createButtonRow(player);
+			player.lastMessage.edit({ components: [row] });
 		}
-
-		if (player.queue.size < count) {
-			return interaction.reply({
-				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription(`대기열에 있는 음악이 ${count}개보다 적어요`)],
-				ephemeral: true,
-			});
-		}
-
-		player.queue.remove(0, count);
-		const removed = player.queue.splice(0, count);
 
 		await interaction.reply({
-			embeds: [
-				new EmbedBuilder()
-					.setColor(interaction.client.config.color.normal)
-					.setDescription(`대기열에서 ${count}개의 음악을 삭제했어요\n\n\`\`\`diff\n${removed.map((track) => `- ${textLengthOverCut(track.title, 50)}`).join("\n")}\`\`\``),
-			],
+			embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`대기열에서 음악을 삭제했어요\n\n\`\`\`diff\n- ${textLengthOverCut(removed[0].title, 50)}\`\`\``)],
 		});
 	},
 };

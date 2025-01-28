@@ -1,20 +1,21 @@
-const { SlashCommandBuilder, EmbedBuilder, channelMention } = require("discord.js");
-const { getChart } = require("../../utils/melon");
-const { textLengthOverCut, msToTime } = require("../../utils/format");
+const { SlashCommandBuilder, EmbedBuilder, channelMention, MessageFlags } = require('discord.js');
+const { getChart } = require('../../utils/melon');
+const { textLengthOverCut, msToTime } = require('../../utils/format');
+const { checkPlayerAndVoiceChannel } = require('../../utils/music');
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName("melon")
-		.setDescription("멜론 차트를 불러와요")
-		.addIntegerOption((option) => option.setName("rank").setDescription("몇 위의 음악까지 불러올지 설정해요 (기본 25위)").setMinValue(1).setMaxValue(50)),
+		.setName('melon')
+		.setDescription('멜론 차트를 불러와요')
+		.addIntegerOption((option) => option.setName('rank').setDescription('몇 위의 음악까지 불러올지 설정해요 (기본 25위)').setMinValue(1).setMaxValue(50)),
 	async execute(interaction) {
 		let player = interaction.client.manager.get(interaction.guild.id);
-		const rank = interaction.options.getInteger("rank") || 25;
+		const rank = interaction.options.getInteger('rank') || 25;
 
 		if (!interaction.member.voice.channel) {
 			return interaction.reply({
-				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription("먼저 음성 채널에 접속한 다음에 사용해주세요")],
-				ephemeral: true,
+				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription('먼저 음성 채널에 접속한 다음에 사용해주세요')],
+				flags: [MessageFlags.Ephemeral],
 			});
 		}
 
@@ -25,23 +26,23 @@ module.exports = {
 				textChannel: interaction.channel.id,
 				volume: 50,
 				selfDeafen: true,
-				repeat: "none",
+				repeat: 'none',
 			});
 		}
 
 		await interaction.deferReply();
 
-		if (!["CONNECTED", "CONNECTING"].includes(player.state)) {
+		if (!['CONNECTED', 'CONNECTING'].includes(player.state)) {
 			await player.connect();
 			await interaction.editReply({
-				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`🔊 ${channelMention(interaction.member.voice.channel.id)} 채널에 접속했어요`)],
+				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`${channelMention(interaction.member.voice.channel.id)} 채널에 접속했어요`)],
 			});
 		}
 
 		if (interaction.member.voice.channel?.id !== player.voiceChannel) {
 			return interaction.editReply({
 				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription(`저와 같은 음성채널에 접속해 있지 않은 것 같아요`)],
-				ephemeral: true,
+				flags: [MessageFlags.Ephemeral],
 			});
 		}
 
@@ -58,17 +59,17 @@ module.exports = {
 					for (let i = 0; i < tracks.length; i++) {
 						try {
 							res = await interaction.client.manager.search(`${tracks[i].title} ${tracks[i].artist} topic`);
-							if (res.loadType === "error") throw res.exception;
+							if (res.loadType === 'error') throw res.exception;
 						} catch (e) {
 							log.error(`음악을 검색하는 중 알 수 없는 오류가 발생했습니다\nError: ${e}`);
 							return await msg.edit({
 								embeds: [
 									new EmbedBuilder()
 										.setColor(interaction.client.config.color.error)
-										.setTitle("🐛 으에... 오류다")
+										.setTitle('🐛 으에... 오류다')
 										.setDescription(`이런! 음악을 검색하는 도중 알 수 없는 오류가 발생했어요\n혹시 비공개 영상이거나, 잘못된 링크가 아닌가요?`),
 								],
-								ephemeral: true,
+								flags: [MessageFlags.Ephemeral],
 							});
 						}
 
@@ -100,7 +101,7 @@ module.exports = {
 					log.error(`멜론차트를 불러오는 도중 알 수 없는 오류가 발생했습니다\nError: ${e}`);
 					return interaction.editReply({
 						embeds: [new EmbedBuilder().setColor(interaction.client.config.color.error).setDescription(`멜론차트를 불러오는 도중 알 수 없는 오류가 발생했어요`)],
-						ephemeral: true,
+						flags: [MessageFlags.Ephemeral],
 					});
 				}
 			});

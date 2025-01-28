@@ -117,9 +117,7 @@ module.exports = {
 
 		let res;
 		try {
-			const isUrl = query.startsWith('http://') || query.startsWith('https://');
-			const isEncoded = (url) => decodeURIComponent(url) !== url;
-			const searchQuery = isUrl ? (isEncoded(query) ? query : encodeURIComponent(query)) : query;
+			const searchQuery = query.includes('http') ? query : `${query} topic`;
 
 			res = await interaction.client.manager.search(searchQuery);
 			if (res.loadType === 'error') throw res.exception;

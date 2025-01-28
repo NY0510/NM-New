@@ -53,8 +53,9 @@ module.exports = async (client) => {
 					}
 				}
 
+				const thumbnailURL = track.thumbnail?.includes('ytimg.com') ? track.thumbnail.replace('default', 'hqdefault') : track.thumbnail || 'https://f.ny64.kr/photos/nmdefault.png';
 				const cardImage = await dynamicCard({
-					thumbnailURL: track.thumbnail?.replace('default', 'hqdefault') || 'https://f.ny64.kr/photos/nmdefault.png',
+					thumbnailURL,
 					songTitle: track.title,
 					songArtist: track.author,
 					trackRequester: track.requester.username,

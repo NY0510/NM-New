@@ -13,8 +13,14 @@ module.exports = {
 		const focusedValue = interaction.options.getFocused();
 		let choices = [];
 		try {
-			if (!focusedValue) choices = ['검색어 또는 URL을 입력해주세요'];
-			else choices = await getAutocompleteSearch(focusedValue);
+			const urlPattern = /^(https?:\/\/)/;
+			if (!focusedValue) {
+				choices = ['검색어 또는 URL을 입력해주세요'];
+			} else if (urlPattern.test(focusedValue)) {
+				choices = [];
+			} else {
+				choices = await getAutocompleteSearch(focusedValue);
+			}
 			await interaction.respond(choices.map((choice) => ({ name: choice, value: choice })));
 		} catch (e) {
 			log.error(`검색 자동완성을 불러오는 중 오류가 발생했습니다\nError: ${e.message}`);

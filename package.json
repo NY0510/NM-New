@@ -1,22 +1,22 @@
 {
-  "name": "slash-autocomplete",
-  "version": "1.0.0",
-  "description": "",
-  "main": "./src/app.js",
-  "scripts": {
-    "start": "bun run .",
-    "dev": "bun run --watch .",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "chalk": "4.1.2",
-    "cheerio": "1.0.0-rc.12",
-    "discord.js": "^14.14.1",
-    "magmastream": "^2.3.1",
-    "request": "^2.88.2",
-    "request-promise": "^4.2.6"
-  }
+	"name": "nm-new",
+	"version": "1.0.0",
+	"description": "",
+	"main": "./src/app.js",
+	"scripts": {
+		"start": "node .",
+		"dev": "nodemon .",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"chalk": "4.1.2",
+		"cheerio": "1.0.0-rc.12",
+		"discord.js": "^14.14.1",
+		"magmastream": "^2.3.1",
+		"request": "^2.88.2",
+		"request-promise": "^4.2.6"
+	}
 }

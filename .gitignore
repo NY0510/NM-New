@@ -5,6 +5,7 @@ packages/*/*.wasm
 *.o
 *.a
 profile.json
+magmastream
 
 node_modules
 config.json

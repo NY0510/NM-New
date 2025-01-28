@@ -1,1 +1,0 @@
-Please do NOT delete the magmastream/ folder as it is used to store player data for autoresume etc.

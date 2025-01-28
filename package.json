@@ -14,9 +14,10 @@
 	"dependencies": {
 		"chalk": "4.1.2",
 		"cheerio": "1.0.0-rc.12",
-		"discord.js": "^14.14.1",
-		"magmastream": "^2.3.1",
+		"discord.js": "^14.17.3",
+		"magmastream": "^2.7.5",
 		"request": "^2.88.2",
 		"request-promise": "^4.2.6"
-	}
+	},
+	"packageManager": "pnpm@8.12.1+sha1.aa961ffce9b6eaa56307d9b5ff7e984f25b7eb58"
 }

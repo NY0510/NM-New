@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder, MessageFlags } = require('discord.js');
 const { textLengthOverCut } = require('../../utils/format');
 const { checkPlayerAndVoiceChannel } = require('../../utils/music');
-const { createButtonRow } = require('../../utils/button');
+const { createMusicControlButton } = require('../../utils/button');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -26,7 +26,7 @@ module.exports = {
 
 		// 카드 버튼 업데이트
 		if (player.lastMessage) {
-			const row = createButtonRow(player);
+			const row = createMusicControlButton(player);
 			player.lastMessage.edit({ components: [row] });
 		}
 

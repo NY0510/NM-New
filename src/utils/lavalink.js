@@ -1,9 +1,9 @@
 const { Manager } = require('magmastream');
-const { EmbedBuilder, AttachmentBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
-const { dynamicCard } = require('songcard');
-const path = require('path');
+const { EmbedBuilder, AttachmentBuilder } = require('discord.js');
+const { generateCardImage } = require('./imageGenerator');
 const wait = require('timers/promises').setTimeout;
-const { createButtonRow } = require('./button');
+const { hyperlink, textLengthOverCut } = require('./format');
+const { createMusicControlButton } = require('./button');
 
 module.exports = async (client) => {
 	const nodes = [
@@ -53,19 +53,11 @@ module.exports = async (client) => {
 					}
 				}
 
-				const thumbnailURL = track.thumbnail?.includes('ytimg.com') ? track.thumbnail.replace('default', 'hqdefault') : track.thumbnail || 'https://f.ny64.kr/photos/nmdefault.png';
-				const cardImage = await dynamicCard({
-					thumbnailURL,
-					songTitle: track.title,
-					songArtist: track.author,
-					trackRequester: track.requester.username,
-					fontPath: path.join(__dirname, '..', 'assets', 'fonts', 'Pretendard-Medium.ttf'),
-				});
+				const cardImage = await generateCardImage(track);
 				const cardAttachment = new AttachmentBuilder(cardImage, 'card.webp');
+				const row = createMusicControlButton(player);
 
-				const row = createButtonRow(player);
-
-				const newMessage = await bindChannel.send({ files: [cardAttachment], components: [row] });
+				const newMessage = await bindChannel.send({ content: `🎵 **${hyperlink(textLengthOverCut(track.title, 50), track.uri)}**`, files: [cardAttachment], components: [row] });
 				player.lastMessage = newMessage;
 			}
 			log.music(`'${track.title}' 음악이 '${bindChannel.guild.name} (${bindChannel.guild.id})' 서버 에서 '${track.requester.username}#${track.requester.discriminator} (${track.requester.id})'에 의해 재생되었습니다`);

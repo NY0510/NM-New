@@ -1,12 +1,11 @@
 const { Events, EmbedBuilder, MessageFlags } = require('discord.js');
-const wait = require('timers/promises').setTimeout;
 
 module.exports = {
 	name: Events.VoiceStateUpdate,
 
 	async execute(client, oldState, newState) {
 		const checkInactivity = async () => {
-			await wait(() => {
+			setTimeout(() => {
 				if (player.paused && stateChange.members.size === 0) {
 					player.destroy();
 					client.channels.cache.get(String(player.textChannel)).send({ embeds: [new EmbedBuilder().setDescription('👋 음성채널이 10분동안 비어있어서, 음악을 종료하고 퇴장했어요').setColor(client.config.color.normal)] });

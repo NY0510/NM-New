@@ -34,9 +34,9 @@ module.exports = {
 
 		if (!['CONNECTED', 'CONNECTING'].includes(player.state)) {
 			await player.connect();
-			await interaction.editReply({
-				embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`${channelMention(interaction.member.voice.channel.id)} 채널에 접속했어요`)],
-			});
+			// await interaction.editReply({
+			// 	embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`${channelMention(interaction.member.voice.channel.id)} 채널에 접속했어요`)],
+			// });
 		}
 
 		if (interaction.member.voice.channel?.id !== player.voiceChannel) {

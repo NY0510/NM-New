@@ -46,8 +46,8 @@ module.exports = {
 		};
 
 		const paginationRow = new ActionRowBuilder().addComponents(
-			new ButtonBuilder().setCustomId('previous').setLabel('이전').setStyle(ButtonStyle.Secondary).setEmoji('⏮️'),
-			new ButtonBuilder().setCustomId('next').setLabel('다음').setStyle(ButtonStyle.Secondary).setEmoji('⏭️')
+			new ButtonBuilder().setCustomId('queue_previous').setLabel('이전').setStyle(ButtonStyle.Secondary).setEmoji('⏮️'),
+			new ButtonBuilder().setCustomId('queue_next').setLabel('다음').setStyle(ButtonStyle.Secondary).setEmoji('⏭️')
 		);
 
 		const paginationBtnDisable = (row) => {
@@ -62,14 +62,14 @@ module.exports = {
 		});
 
 		const collector = replyMessage.createMessageComponentCollector({
-			filter: (i) => i.customId === 'previous' || i.customId === 'next',
+			filter: (i) => i.customId === 'queue_previous' || i.customId === 'queue_next',
 			time: 120 * 1000,
 		});
 
 		collector.on('collect', async (i) => {
-			if (i.customId === 'previous') {
+			if (i.customId === 'queue_previous') {
 				currentPage = Math.max(currentPage - 1, 0);
-			} else if (i.customId === 'next') {
+			} else if (i.customId === 'queue_next') {
 				currentPage = Math.min(currentPage + 1, maxPage - 1);
 			}
 

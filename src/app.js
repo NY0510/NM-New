@@ -11,9 +11,9 @@ const client = new Client({
 global.log = log;
 client.rootPath = __dirname;
 client.config = config;
+client.config.version = require('../package.json').version;
 client.defaultVolume = 100;
 require('./utils/lavalink')(client);
-// console.log(client.manager);
 
 // 커맨드 핸들러
 client.commands = new Collection();

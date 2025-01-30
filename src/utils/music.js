@@ -1,6 +1,6 @@
 const { EmbedBuilder, MessageFlags } = require('discord.js');
 const { createMusicControlButton } = require('./button');
-const { hyperlink, textLengthOverCut } = require('./format');
+const { hyperlink, textLengthOverCut, msToTime } = require('./format');
 const { createAddToQueueButton } = require('./button');
 
 const sendError = (interaction, message, followUp = false) => {
@@ -62,7 +62,7 @@ const addTrackToQueue = async (track, player, interaction) => {
 	await interaction.followUp({
 		embeds: [
 			new EmbedBuilder()
-				.setTitle(`💿 음악을 대기열에 추가했어요`)
+				.setTitle(`💿 음악을 대기열에 추가했어요 (${msToTime(track.duration)})`)
 				.setDescription(hyperlink(textLengthOverCut(track.title, 50), track.uri))
 				.setThumbnail(track.artworkUrl)
 				.setColor(interaction.client.config.color.normal),
@@ -95,7 +95,7 @@ const addPlaylistToQueue = async (playlist, player, interaction, query) => {
 	await interaction.followUp({
 		embeds: [
 			new EmbedBuilder()
-				.setTitle(`📜 재생목록에 포함된 노래 ${filteredTracks.length}곡을 대기열에 추가했어요`)
+				.setTitle(`📜 재생목록에 포함된 노래 ${filteredTracks.length}곡을 대기열에 추가했어요 (${msToTime(res.playlist.duration)})`)
 				.setDescription(hyperlink(textLengthOverCut(playlist.name, 50), query))
 				.setThumbnail(playlist.tracks[0].artworkUrl)
 				.setColor(interaction.client.config.color.normal),

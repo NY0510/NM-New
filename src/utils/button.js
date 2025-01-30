@@ -21,6 +21,6 @@ module.exports = {
 	},
 
 	createAddToQueueButton(type, uri) {
-		return new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`add_${type}_${uri}`).setLabel('대기열에 추가').setStyle(ButtonStyle.Primary));
+		return new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`add_${type}_${uri}`).setLabel('➕ 대기열에 추가').setStyle(ButtonStyle.Primary));
 	},
 };

@@ -84,7 +84,7 @@ module.exports = {
 					break;
 			}
 
-			if (interaction.client.manager.player?.lastMessage === interaction.message) {
+			if (player?.lastMessage === interaction.message) {
 				const row = createMusicControlButton(player);
 				await interaction.message.edit({ components: [row] });
 			}

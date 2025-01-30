@@ -44,22 +44,24 @@ module.exports = async (client) => {
 		.on('trackStart', async (player, track) => {
 			const bindChannel = client.channels.cache.get(player.textChannel);
 
-			if (!player.trackRepeat) {
-				if (player.lastMessage) {
-					try {
-						await player.lastMessage.delete();
-					} catch (error) {
-						log.warn(`이전 음악 재생 메세지를 삭제하는 중 오류가 발생했습니다: ${error.message}`);
-					}
+			// if (!player.trackRepeat) {
+			if (player.lastMessage) {
+				try {
+					await player.lastMessage.delete();
+					player.lastMessage = null;
+				} catch (error) {
+					log.warn(`이전 음악 재생 메세지를 삭제하는 중 오류가 발생했습니다: ${error.message}`);
+					return;
 				}
-
-				const cardImage = await generateCardImage(track);
-				const cardAttachment = new AttachmentBuilder(cardImage, 'card.webp');
-				const row = createMusicControlButton(player);
-
-				const newMessage = await bindChannel.send({ content: `🎵 **${hyperlink(textLengthOverCut(track.title, 50), track.uri)}**`, files: [cardAttachment], components: [row] });
-				player.lastMessage = newMessage;
 			}
+
+			const cardImage = await generateCardImage(track);
+			const cardAttachment = new AttachmentBuilder(cardImage, 'card.webp');
+			const row = createMusicControlButton(player);
+
+			const newMessage = await bindChannel.send({ content: `🎵 **${hyperlink(textLengthOverCut(track.title, 50), track.uri)}**`, files: [cardAttachment], components: [row] });
+			player.lastMessage = newMessage;
+			// }
 			log.music(`'${track.title}' 음악이 '${bindChannel.guild.name} (${bindChannel.guild.id})' 서버 에서 '${track.requester.username}#${track.requester.discriminator} (${track.requester.id})'에 의해 재생되었습니다`);
 		})
 		.on('queueEnd', (player) => {

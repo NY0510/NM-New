@@ -95,6 +95,12 @@ module.exports = {
 					return sendError(interaction, '샅샅이 살펴보았지만, 그런 음악은 없는 것 같아요', true);
 				}
 
+				if (track.duration < 5000) {
+					// Check if the track is shorter than 5 seconds
+					if (!player.queue.current) await player.destroy();
+					return sendError(interaction, '5초보다 짧은 영상은 재생할 수 없어요', true);
+				}
+
 				await addTrackToQueue(track, player, interaction);
 				break;
 			}

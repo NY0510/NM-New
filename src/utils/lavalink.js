@@ -59,7 +59,7 @@ module.exports = async (client) => {
 			const cardAttachment = new AttachmentBuilder(cardImage, 'card.webp');
 			const row = createMusicControlButton(player);
 
-			const newMessage = await bindChannel.send({ content: `🎵 **${hyperlink(textLengthOverCut(track.title, 50), track.uri)}**`, files: [cardAttachment], components: [row] });
+			const newMessage = await bindChannel.send({ content: `🎵 ${hyperlink(textLengthOverCut(track.title, 50), track.uri)}`, files: [cardAttachment], components: [row] });
 			player.lastMessage = newMessage;
 			// }
 			log.music(`'${track.title}' 음악이 '${bindChannel.guild.name} (${bindChannel.guild.id})' 서버 에서 '${track.requester.username}#${track.requester.discriminator} (${track.requester.id})'에 의해 재생되었습니다`);

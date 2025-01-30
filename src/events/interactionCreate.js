@@ -27,9 +27,17 @@ module.exports = {
 			switch (interaction.customId) {
 				case 'playpause':
 					player.pause(!player.paused);
+					await client.channels.cache.get(String(player.textChannel)).send({
+						embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`음악을 ${player.paused ? '일시정지' : '재생'}했어요`)],
+						flags: [MessageFlags.Ephemeral],
+					});
 					break;
 				case 'next':
 					player.stop();
+					await client.channels.cache.get(String(player.textChannel)).send({
+						embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription('다음 곡을 재생할게요')],
+						flags: [MessageFlags.Ephemeral],
+					});
 					break;
 				case 'loop':
 					if (!player.queueRepeat && !player.trackRepeat) {
@@ -40,10 +48,16 @@ module.exports = {
 					} else {
 						player.setQueueRepeat(false);
 					}
+
+					await client.channels.cache.get(String(player.textChannel)).send({
+						embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription(`반복 모드를 ${player.queueRepeat ? '대기열' : player.trackRepeat ? '곡' : '없음'}(으)로 변경했어요`)],
+						flags: [MessageFlags.Ephemeral],
+					});
 					break;
 				case 'stop':
 					await client.channels.cache.get(String(player.textChannel)).send({
 						embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription('음악을 정지했어요')],
+						flags: [MessageFlags.Ephemeral],
 					});
 					player.destroy();
 					break;

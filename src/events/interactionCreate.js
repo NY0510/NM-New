@@ -43,7 +43,7 @@ module.exports = {
 					break;
 				case 'stop':
 					await client.channels.cache.get(String(player.textChannel)).send({
-						embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription('음악을 정지했어요').setAuthor({ name: interaction.user, iconURL: interaction.user.displayAvatarURL() })],
+						embeds: [new EmbedBuilder().setColor(interaction.client.config.color.normal).setDescription('음악을 정지했어요').setFooter({ text: interaction.user, iconURL: interaction.user.displayAvatarURL() })],
 					});
 					player.destroy();
 					break;

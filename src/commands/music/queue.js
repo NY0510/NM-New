@@ -45,10 +45,7 @@ module.exports = {
 				);
 		};
 
-		const paginationRow = new ActionRowBuilder().addComponents(
-			new ButtonBuilder().setCustomId('queue_previous').setLabel('이전').setStyle(ButtonStyle.Secondary).setEmoji('⏮️'),
-			new ButtonBuilder().setCustomId('queue_next').setLabel('다음').setStyle(ButtonStyle.Secondary).setEmoji('⏭️')
-		);
+		const paginationRow = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('queue_previous').setLabel('이전').setStyle(ButtonStyle.Secondary).setEmoji('⏮️'), new ButtonBuilder().setCustomId('queue_next').setLabel('다음').setStyle(ButtonStyle.Secondary).setEmoji('⏭️'));
 
 		const paginationBtnDisable = (row) => {
 			row.components[0].setDisabled(currentPage === 0);
@@ -67,24 +64,43 @@ module.exports = {
 		});
 
 		collector.on('collect', async (i) => {
-			if (i.customId === 'queue_previous') {
-				currentPage = Math.max(currentPage - 1, 0);
-			} else if (i.customId === 'queue_next') {
-				currentPage = Math.min(currentPage + 1, maxPage - 1);
+			try {
+				if (i.customId === 'queue_previous') {
+					currentPage = Math.max(currentPage - 1, 0);
+				} else if (i.customId === 'queue_next') {
+					currentPage = Math.min(currentPage + 1, maxPage - 1);
+				}
+
+				paginationBtnDisable(paginationRow);
+
+				await i.update({
+					embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
+					components: [paginationRow],
+				});
+			} catch (error) {
+				if (error.code === 10062) {
+					await i.followUp({
+						content: '이 상호작용은 더 이상 유효하지 않습니다.',
+						ephemeral: true,
+					});
+				} else {
+					console.error('Error updating interaction:', error);
+				}
 			}
-
-			paginationBtnDisable(paginationRow);
-
-			await i.update({
-				embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
-				components: [paginationRow],
-			});
 		});
 
 		collector.on('end', async () => {
-			if (player.queue.size > itemsPerPage) {
-				paginationRow.components.forEach((c) => c.setDisabled(true));
-				await replyMessage.edit({ embeds: [getQueueEmbed(getQueueListForPage(currentPage))], components: [paginationRow] });
+			try {
+				if (player.queue.size > itemsPerPage) {
+					paginationRow.components.forEach((c) => c.setDisabled(true));
+					await replyMessage.edit({ embeds: [getQueueEmbed(getQueueListForPage(currentPage))], components: [paginationRow] });
+				}
+			} catch (error) {
+				if (error.code === 10062) {
+					console.log('Interaction expired before end handler could run.');
+				} else {
+					console.error('Error ending interaction:', error);
+				}
 			}
 		});
 	},

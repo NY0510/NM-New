@@ -64,29 +64,20 @@ module.exports = {
 		});
 
 		collector.on('collect', async (i) => {
-			try {
-				if (i.customId === 'queue_previous') {
-					currentPage = Math.max(currentPage - 1, 0);
-				} else if (i.customId === 'queue_next') {
-					currentPage = Math.min(currentPage + 1, maxPage - 1);
-				}
-
-				paginationBtnDisable(paginationRow);
-
-				await i.update({
-					embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
-					components: [paginationRow],
-				});
-			} catch (error) {
-				if (error.code === 10062) {
-					await i.followUp({
-						content: '이 상호작용은 더 이상 유효하지 않습니다.',
-						ephemeral: true,
-					});
-				} else {
-					console.error('Error updating interaction:', error);
-				}
+			if (i.customId === 'queue_previous') {
+				console.log('queue previous');
+				currentPage = Math.max(currentPage - 1, 0);
+			} else if (i.customId === 'queue_next') {
+				console.log('queue next');
+				currentPage = Math.min(currentPage + 1, maxPage - 1);
 			}
+
+			paginationBtnDisable(paginationRow);
+
+			await i.update({
+				embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
+				components: [paginationRow],
+			});
 		});
 
 		collector.on('end', async () => {

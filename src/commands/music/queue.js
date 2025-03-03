@@ -65,14 +65,14 @@ module.exports = {
 
 		collector.on('collect', async (i) => {
 			if (i.customId === 'queue_previous') {
-				console.log('queue previous');
 				currentPage = Math.max(currentPage - 1, 0);
 			} else if (i.customId === 'queue_next') {
-				console.log('queue next');
 				currentPage = Math.min(currentPage + 1, maxPage - 1);
 			}
 
 			paginationBtnDisable(paginationRow);
+
+			console.log(i);
 
 			await i.update({
 				embeds: [getQueueEmbed(getQueueListForPage(currentPage))],

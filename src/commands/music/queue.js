@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags, ComponentType } = require('discord.js');
 const { msToTime, textLengthOverCut, hyperlink } = require('../../utils/format');
 const { checkPlayerAndVoiceChannel } = require('../../utils/music');
 
@@ -60,6 +60,8 @@ module.exports = {
 
 		const collector = replyMessage.createMessageComponentCollector({
 			filter: (i) => i.customId === 'queue_previous' || i.customId === 'queue_next',
+			componentType: ComponentType.Button,
+			time: 60_000,
 			// time: 120 * 1000,
 		});
 

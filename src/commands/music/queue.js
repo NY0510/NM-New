@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, MessageFlags, ComponentType } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js');
 const { msToTime, textLengthOverCut, hyperlink } = require('../../utils/format');
 const { checkPlayerAndVoiceChannel } = require('../../utils/music');
 
@@ -8,7 +8,7 @@ module.exports = {
 		const player = interaction.client.manager.get(interaction.guild.id);
 
 		const errorResponse = checkPlayerAndVoiceChannel(interaction, player);
-		if (errorResponse) return interaction.reply(errorResponse);
+		if (errorResponse) return interaction.reply({ content: errorResponse, ephemeral: true });
 
 		await interaction.deferReply();
 
@@ -30,8 +30,8 @@ module.exports = {
 
 		const getQueueEmbed = (queueListForPage) => {
 			const leftQueue = Math.max(queueList.length - (currentPage + 1) * itemsPerPage, 0);
+			const footerText = maxPage > 1 ? `( ${currentPage + 1} / ${maxPage} 페이지 )${leftQueue > 0 ? `\n+${leftQueue}곡` : ''}` : ' ';
 
-			const footerText = player.queue.size > itemsPerPage ? `( ${currentPage + 1} / ${maxPage} 페이지 )${leftQueue > 0 ? `\n+${leftQueue}곡` : ''}` : ' ';
 			return new EmbedBuilder()
 				.setColor(interaction.client.config.color.normal)
 				.setTitle('📋 현재 대기열')
@@ -47,19 +47,19 @@ module.exports = {
 
 		const paginationRow = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId('queue_previous').setLabel('이전').setStyle(ButtonStyle.Secondary).setEmoji('⏮️'), new ButtonBuilder().setCustomId('queue_next').setLabel('다음').setStyle(ButtonStyle.Secondary).setEmoji('⏭️'));
 
-		const paginationBtnDisable = (row) => {
-			row.components[0].setDisabled(currentPage === 0);
-			row.components[1].setDisabled(currentPage === maxPage - 1);
+		const paginationBtnDisable = () => {
+			paginationRow.components[0].setDisabled(currentPage === 0);
+			paginationRow.components[1].setDisabled(currentPage === maxPage - 1);
 		};
 
-		paginationBtnDisable(paginationRow);
+		paginationBtnDisable();
 		const replyMessage = await interaction.editReply({
 			embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
-			components: player.queue.size > itemsPerPage ? [paginationRow] : [],
+			components: maxPage > 1 ? [paginationRow] : [],
 		});
 
 		const collector = replyMessage.createMessageComponentCollector({
-			filter: (i) => i.customId === 'queue_previous' || i.customId === 'queue_next',
+			filter: (i) => i.user.id === interaction.user.id,
 			componentType: ComponentType.Button,
 			time: 120 * 1000,
 		});
@@ -71,8 +71,8 @@ module.exports = {
 				currentPage = Math.min(currentPage + 1, maxPage - 1);
 			}
 
-			paginationBtnDisable(paginationRow);
-
+			paginationBtnDisable();
+			await i.deferUpdate();
 			await i.editReply({
 				embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
 				components: [paginationRow],
@@ -82,9 +82,12 @@ module.exports = {
 		collector.on('end', async () => {
 			console.log('Queue pagination collector ended.');
 			try {
-				if (player.queue.size > itemsPerPage) {
+				if (maxPage > 1) {
 					paginationRow.components.forEach((c) => c.setDisabled(true));
-					await replyMessage.edit({ embeds: [getQueueEmbed(getQueueListForPage(currentPage))], components: [paginationRow] });
+					await replyMessage.edit({
+						embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
+						components: [paginationRow],
+					});
 				}
 			} catch (error) {
 				if (error.code === 10062) {

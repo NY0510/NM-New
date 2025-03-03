@@ -10,7 +10,7 @@ module.exports = {
 		const errorResponse = checkPlayerAndVoiceChannel(interaction, player);
 		if (errorResponse) return interaction.reply(errorResponse);
 
-		await interaction.deferUpdate();
+		await interaction.deferReply();
 
 		const queueList = Array.from(player.queue, (song, index) => ({
 			title: `${index + 1}. ${song.title}`,

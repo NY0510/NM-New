@@ -10,7 +10,7 @@ module.exports = {
 		const errorResponse = checkPlayerAndVoiceChannel(interaction, player);
 		if (errorResponse) return interaction.reply(errorResponse);
 
-		await interaction.deferReply();
+		await interaction.deferUpdate();
 
 		const queueList = Array.from(player.queue, (song, index) => ({
 			title: `${index + 1}. ${song.title}`,
@@ -65,8 +65,6 @@ module.exports = {
 		});
 
 		collector.on('collect', async (i) => {
-			await i.deferUpdate();
-
 			if (i.customId === 'queue_previous') {
 				currentPage = Math.max(currentPage - 1, 0);
 			} else if (i.customId === 'queue_next') {

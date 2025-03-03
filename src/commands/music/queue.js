@@ -65,6 +65,8 @@ module.exports = {
 		});
 
 		collector.on('collect', async (i) => {
+			await i.deferUpdate();
+
 			if (i.customId === 'queue_previous') {
 				currentPage = Math.max(currentPage - 1, 0);
 			} else if (i.customId === 'queue_next') {
@@ -73,7 +75,7 @@ module.exports = {
 
 			paginationBtnDisable(paginationRow);
 
-			await i.update({
+			await i.editReply({
 				embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
 				components: [paginationRow],
 			});

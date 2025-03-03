@@ -95,7 +95,7 @@ const addPlaylistToQueue = async (playlist, player, interaction, query) => {
 	await interaction.followUp({
 		embeds: [
 			new EmbedBuilder()
-				.setTitle(`📜 재생목록에 포함된 노래 ${filteredTracks.length}곡을 대기열에 추가했어요 (${msToTime(res.playlist.duration)})`)
+				.setTitle(`📜 재생목록에 포함된 노래 ${filteredTracks.length}곡을 대기열에 추가했어요 (${msToTime(playlist.duration)})`)
 				.setDescription(hyperlink(textLengthOverCut(playlist.name, 50), query))
 				.setThumbnail(playlist.tracks[0].artworkUrl)
 				.setColor(interaction.client.config.color.normal),

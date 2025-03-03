@@ -61,8 +61,7 @@ module.exports = {
 		const collector = replyMessage.createMessageComponentCollector({
 			filter: (i) => i.customId === 'queue_previous' || i.customId === 'queue_next',
 			componentType: ComponentType.Button,
-			time: 60_000,
-			// time: 120 * 1000,
+			time: 120 * 1000,
 		});
 
 		collector.on('collect', async (i) => {
@@ -74,8 +73,6 @@ module.exports = {
 
 			paginationBtnDisable(paginationRow);
 
-			console.log(i);
-
 			await i.update({
 				embeds: [getQueueEmbed(getQueueListForPage(currentPage))],
 				components: [paginationRow],
@@ -83,6 +80,7 @@ module.exports = {
 		});
 
 		collector.on('end', async () => {
+			console.log('Queue pagination collector ended.');
 			try {
 				if (player.queue.size > itemsPerPage) {
 					paginationRow.components.forEach((c) => c.setDisabled(true));

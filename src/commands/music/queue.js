@@ -60,7 +60,7 @@ module.exports = {
 
 		const collector = replyMessage.createMessageComponentCollector({
 			filter: (i) => i.customId === 'queue_previous' || i.customId === 'queue_next',
-			time: 120 * 1000,
+			// time: 120 * 1000,
 		});
 
 		collector.on('collect', async (i) => {
